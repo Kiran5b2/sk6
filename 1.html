@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TO-DO LIST</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fdfcfc;
+        background-image: url("https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=pexels-pixabay-531880.jpg&fm=jpg");
+    }
+    .container {
+        max-width: 600px;
+        margin: 30px auto;
+        background-color: #e9e2e2;
+        padding: 35px;
+        border-radius: 12px;
+        box-shadow: 0 3px 6px rgb(3, 0, 0);
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    input[type="text"] {
+        width: calc(100% - 40px);
+        padding: 25px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 12px;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    li {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+        position: relative;
+    }
+    li.completed {
+        background-color: #f0f0f0;
+    }
+    li.completed span {
+        text-decoration: line-through;
+        color: #df1010;
+    }
+    input[type="text"]:hover {
+        border-color: #4f32c5;
+        border-radius: 12px;
+    }
+    .delete-btn {
+        float: right;
+        background: none;
+        border: none;
+        color: #ff0000;
+        cursor: pointer;
+    }
+    .status-select {
+        float: right;
+        border: 1px solid #4f32c5;
+        border-radius: 10px;
+        padding: 5px;
+        background-color: #fff;
+        margin-left: 10px;
+    }
+    .status-select:hover {
+        border-color: #540eeb;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>TO-DO LIST</h1>
+    <input type="text" id="taskInput" placeholder="ADD NEW TASK...">
+    <ul id="taskList">
+        
+    </ul>
+</div>
+
+<script>
+    function addTask() {
+        var input = document.getElementById("taskInput");
+        var task = input.value;
+        if (task.trim() !== "") {
+            var ul = document.getElementById("taskList");
+            var li = document.createElement("li");
+            var taskSpan = document.createElement("span");
+            taskSpan.textContent = task;
+            var taskTextArea = document.createElement("textarea");
+            taskTextArea.value = task;
+            taskTextArea.style.display = "none"; 
+            li.appendChild(taskSpan);
+            li.appendChild(taskTextArea);
+
+            li.addEventListener("dblclick", function() {
+                taskSpan.style.display = "none";
+                taskTextArea.style.display = "block";
+                taskTextArea.focus();
+            });
+            taskTextArea.addEventListener("blur", function() {
+                taskSpan.textContent = taskTextArea.value;
+                taskSpan.style.display = "block";
+                taskTextArea.style.display = "none"; 
+            });
+
+            var statusSelect = document.createElement("select");
+            statusSelect.className = "status-select";
+            var option1 = document.createElement("option");
+            option1.value = "not-completed";
+            option1.text = "Not Completed";
+            var option2 = document.createElement("option");
+            option2.value = "completed";
+            option2.text = "Completed";
+            statusSelect.appendChild(option1);
+            statusSelect.appendChild(option2);
+            li.appendChild(statusSelect);
+
+            var deleteBtn = document.createElement("button");
+            deleteBtn.innerHTML = "&times;";
+            deleteBtn.className = "delete-btn";
+            deleteBtn.onclick = function() {
+                li.parentNode.removeChild(li);
+            };
+            li.appendChild(deleteBtn);
+            ul.appendChild(li);
+
+            statusSelect.addEventListener("change", function() {
+                if (this.value === "completed") {
+                    li.classList.add("completed");
+                } else {
+                    li.classList.remove("completed");
+                }
+            });
+
+            input.value = "";
+        } else {
+            alert("Please enter a task!");
+        }
+    }
+    document.getElementById("taskInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            addTask();
+        }
+    });
+</script>
+</body>
+</html>
